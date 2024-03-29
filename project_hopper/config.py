@@ -1,7 +1,7 @@
 import json
 import os
 
-from .exceptions import InvalidProjectDirectory, InvalidExecutable
+from .exceptions import InvalidProjectDirectory, InvalidExecutableProgram
 
 
 def get_settings_keys() -> list[str]:

@@ -1,6 +1,6 @@
 Project Hopper's purpose is to allow for easier 'hopping' between projects and project folders via a CLI tool with minimal typing. The goal is simply having to type 'dev' in order to jump into any IDE form within any project folder.
 
-To start using, run setup to register the "dev" command.
+To start using, run setup to register the 'dev' command.
 
 ```console
 pip install .
