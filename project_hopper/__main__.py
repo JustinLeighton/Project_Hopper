@@ -1,7 +1,7 @@
 import sys
 import click  # Importing Click instead of Typer
-from config import load_settings, write_settings, clean_setting_input
-from gui import display_projects
+from .config import load_settings, write_settings, clean_setting_input, validate_settings_values
+from .gui import display_projects
 
 
 @click.group()
@@ -43,6 +43,7 @@ def main():
     settings = load_settings()
     directory = settings["directory"]
     callback = settings["callback"]
+    validate_settings_values(settings)
     display_projects(directory=directory, callback=callback)
 
 

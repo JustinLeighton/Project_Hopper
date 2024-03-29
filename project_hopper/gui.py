@@ -3,41 +3,37 @@ import tkinter as tk
 from tkinter import ttk
 import subprocess
 
-from utils import unix_time_to_yyyy_mm_dd
+from .utils import unix_time_to_yyyy_mm_dd
 
 
-def display_projects(directory: str, callback: str) -> None:
+def display_projects(directory: str, executable: str) -> None:
     """
     Displays project folders in the project directory using Tkinter.
 
     Args:
     - directory (str): The path to the directory containing the projects.
-    - callback (str): The command to execute for opening a selected project.
+    - executable (str): The program to execute for opening a selected project.
     """
-    app = ProjectSelector(directory, callback)
+    app = ProjectSelector(directory, executable)
     app.mainloop()
 
 
 class ProjectSelector(tk.Tk):
-    def __init__(self, directory: str, callback: str):
+    def __init__(self, directory: str, executable: str):
         super().__init__()
         self.title("Folder Selector")
         self.directory = directory
-        self.callback = callback
+        self.executable = executable
         self.sort_orders: dict[str, str] = {}
         self.setup_ui()
         self.sort_tree("Last Modified")
 
     def setup_ui(self) -> None:
         self.title("Project Hopper")
-        print("~~~")
-        print(os.getcwd())
-        print("~~~")
-        print(os.listdir(os.getcwd()))
-        print("~~~")
-        print(os.listdir(os.path.join(os.getcwd(), "assets")))
 
-        icon_path = "./assets/icon.png"
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+        icon_path = os.path.join(parent_dir, 'assets', 'icon.png')
         icon_img = tk.PhotoImage(file=icon_path)
         self.iconphoto(True, icon_img)
 
@@ -74,8 +70,7 @@ class ProjectSelector(tk.Tk):
     def on_double_click(self, event) -> None:  # type: ignore
         item = self.tree.selection()[0]
         selected_folder = self.tree.item(item, "values")[1]
-        # print(selected_folder)
-        subprocess.run([self.callback, selected_folder], check=True)
+        subprocess.run([self.executable, selected_folder], check=True)
         self.quit()
 
     def sort_tree(self, column_name: str) -> None:

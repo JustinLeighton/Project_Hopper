@@ -1,6 +1,17 @@
 import json
 import os
 
+from .exceptions import InvalidProjectDirectory, InvalidExecutable
+
+
+def get_settings_keys() -> list[str]:
+    """
+    Get list of keys found in settings.json
+
+    Returns:
+        list[str]: list of keys found in settings.json
+    """
+    return ["directory", "executable"]
 
 def get_settings_path() -> str:
     """
@@ -67,10 +78,30 @@ def validate_settings_keys(settings: dict[str, str]) -> None:
     Raises:
     - KeyError: If specific keys are missing in the settings object.
     """
-    keys = ["directory", "callback"]
+    keys = get_settings_keys()
     missing_keys = [x for x in keys if x not in settings]
     if missing_keys:
         raise KeyError(f"The following key(s) is/are missing in the settings: {', '.join(missing_keys)}")
+
+
+def validate_settings_values(data: dict[str, str]) -> None:
+    settings_path = get_settings_path()
+    settings = read_settings(settings_path)
+    validate_settings_keys(settings)
+    
+    key = 'directory'
+    if not settings[key]:
+        raise InvalidProjectDirectory(f"Missing project directory path. Use 'dev set {key} <PATH>'.")
+    if not os.path.exists(settings[key]):
+        raise InvalidProjectDirectory(f"Invalid path: '{settings[key]}")
+    
+    key = 'executable'
+    if not settings[key]:
+        raise InvalidExecutable(f"Missing executable program. Use 'dev set {key} <PATH>'.")
+    if not os.path.exists(settings[key]):
+        raise InvalidExecutable(f"Invalid path: '{settings[key]}")
+    if not os.access(settings[key], os.X_OK):
+        raise InvalidExecutable(f"Invalid path: '{settings[key]}, must be an executable")
 
 
 def clean_setting_input(input: str) -> str:

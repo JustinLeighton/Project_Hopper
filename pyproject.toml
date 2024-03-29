@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "projecthopper"
-version = "0.1.0"
+name = "project_hopper"
+version = "0.2.0"
 description = ""
 authors = ["Justin Leighton <justinthomas.leighton@gmail.com>"]
 readme = "README.md"
@@ -9,6 +9,9 @@ readme = "README.md"
 python = "^3.10"
 poetry = "^1.8.2"
 typer = "^0.11.0"
+
+[tool.poetry.scripts]
+dev = { callable = "project_hopper.__main__:main" }
 
 
 [build-system]
