@@ -62,6 +62,8 @@ def default():
     display_projects(directory=directory, executable=executable)
 
 
+
+
 def main():
     if len(sys.argv) == 1:
         default()

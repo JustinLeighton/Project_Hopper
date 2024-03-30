@@ -31,12 +31,6 @@ class ProjectSelector(tk.Tk):
     def setup_ui(self) -> None:
         self.title("Project Hopper")
 
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
-        icon_path = os.path.join(parent_dir, 'assets', 'icon.png')
-        icon_img = tk.PhotoImage(file=icon_path)
-        self.iconphoto(True, icon_img)
-
         self.tree = ttk.Treeview(self, columns=("Folder Name", "Path", "Last Modified"))
         self.tree.heading("#0")
         self.tree.heading("Folder Name", text="Folder Name", command=lambda: self.sort_tree("Folder Name"))
@@ -70,7 +64,7 @@ class ProjectSelector(tk.Tk):
     def on_double_click(self, event) -> None:  # type: ignore
         item = self.tree.selection()[0]
         selected_folder = self.tree.item(item, "values")[1]
-        subprocess.run([self.executable, selected_folder], check=True)
+        subprocess.Popen([self.executable, selected_folder], shell=True, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.quit()
 
     def sort_tree(self, column_name: str) -> None:
